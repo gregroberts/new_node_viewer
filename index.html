@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Basic sigma.js example</title>
+  <style type="text/css">
+    body {
+      margin: 0;
+    }
+    #container {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+    }
+  </style>
+</head>
+<body>
+  <input type="text" id="node0">
+  <button id="node0submit">Submit</button>
+
+  <div id="container"></div>
+  <script src="sigma.min.js"></script>
+  <script src="plugins/sigma.layout.forceAtlas2.min.js"></script>
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
+  <script>
+    // Let's first initialize sigma:
+
+  function add_objects(s,result) {
+    var nodes = s.graph.nodes();
+    var nodels = Array();
+    for (i=0; i<nodes.length; i++){nodels.push(nodes[i]['label'])};
+    var edges = s.graph.edges();
+    var edgels = Array();
+    for (i=0;i<edges.length;i++){edgels.push(edges[i]['id'])};    
+    res = jQuery.parseJSON(result);
+    for (var i =0; i<res['nodes'].length; i++){
+      n = res['nodes'][i];
+      if (nodels.indexOf(n['label'])==-1){
+        s.graph.addNode({
+          id:n['id'],
+          label:n['label'].replace(/\+/g," "),
+          x:n['x'],
+          y:n['y'],
+          size:1,
+          color: n['colour']})
+      }
+    };
+    s.refresh();
+    for (var i=0; i<res['edges'].length; i++){
+      n = res['edges'][i];
+      theid = n['id'].replace(/\+/g," ")
+      if (edgels.indexOf(theid) == -1){
+        s.graph.addEdge({
+          id: theid,
+          source: n['source'].replace(/\+/g," "),
+          target: n['target'].replace(/\+/g," ")
+        });
+      }
+    };      
+  };
+
+  function add_node(site,node,rel,s) {
+    $.ajax({
+      url:'getnode.php',
+      type:'GET',
+      data: {
+        'node':node.replace(/ /g,"_"),
+        'rel':rel,
+        'site':site
+      },
+      success: function (result) {
+          add_objects(s,result);
+          s.startForceAtlas2();
+      },
+      error: function(result) {console.log(result);}
+    })
+  };    
+
+  $('#node0submit').click(function (){
+    var node0 = $('#node0').val();
+    console.log(node0);
+    var s = new sigma('container');
+    var site = 'google';
+    var rel = 'vs';
+    s.graph.addNode({
+      id:'n'+node0,
+      label:node0,
+      x:0,
+      y:0,
+      size:1,
+      color:'#f00'
+    });
+    add_node(site,node0,rel,s);
+    s.refresh();
+    s.bind('clickNode', function(e){
+      add_node(site, e.data.node.label, rel, s);
+    });
+    s.refresh();
+  });
+
+  </script>
+</body>
+</html
