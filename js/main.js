@@ -1,8 +1,29 @@
+//method for finding neighbors
+sigma.classes.graph.addMethod('neighbors', function(nodeId){
+    var k,
+        neighbors = {},
+        index = this.allNeighborsIndex[nodeId] || {};
+    for (k in index)
+      neighbors[k] = this.nodesIndex[k];
+    return neighbors;        
+});
 
-
+//we need to make sure the proper 'originalColor values are stored for each node'
+function normal_cols(s){
+    try{
+        s.graph.nodes().forEach(function(n){
+            n.color = n.originalColor;
+        });
+        s.graph.edges().forEach(function(n){
+            n.color = n.originalColor;
+        });
+    }
+    catch (err){
+        console.log(err);
+    }
+};
 
 function add_objects(s,result, node) {
-
     //relative position of parent node
     var _x = node.data.node.x,
         _y = node.data.node.y;   
@@ -55,6 +76,8 @@ function add_objects(s,result, node) {
 };
 
 function add_node(site,e,rel,s) {
+    //reset all colours first
+    normal_cols(s)
     var nodelabel=  e.data.node.label;
     $.ajax({
         url:'getnode.php',
@@ -75,20 +98,18 @@ function add_node(site,e,rel,s) {
 $('#node0submit').click(function (){
     var node0 = $('#node0').val();
     $('#container').empty();
-
-    //method for finding neighbors
-    sigma.classes.graph.addMethod('neighbors', function(nodeId){
-        var k,
-            neighbors = {},
-            index = this.allNeighborsIndex[nodeId] || {};
-        for (k in index)
-          neighbors[k] = this.nodesIndex[k];
-        return neighbors;        
-    });
     //initialize sigma with settings
-    var s = new sigma('container');
+    var s = new sigma({
+        container: 'container',
+        settings: {
+            edgeColor: '#000',
+            minNodeSize: 3,
+            maxNodeSize: 10,
+            animationsTime: 400
+        }
+    });
     var site = 'google';
-    var rel = 'vs';
+    var rel = $('#rel').val();
     zeroth = {
         id:'n'+node0,
         label:node0,
@@ -133,13 +154,10 @@ $('#node0submit').click(function (){
     });
     //opposite of overnode
     s.bind('outNodes', function(e){
-        s.graph.nodes().forEach(function(n){
-            n.color = n.originalColor;
-        });
-        s.graph.edges().forEach(function(n){
-            n.color = n.originalColor;
-        })
-    })
+        normal_cols(s);
+    });
+
+
 
 
 
