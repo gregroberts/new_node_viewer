@@ -117,7 +117,7 @@ function add_node(site,e,rel,s) {
     $.ajax({
         url:'getnode.php',
         type:'GET',
-        async:false,
+        async:true,
         data: {
             'node':nodelabel.replace(/ /g,"_"),
             'rel':rel,

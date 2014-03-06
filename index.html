@@ -1,34 +1,114 @@
 <!DOCTYPE html>
 <html>
-<head>
-  <title>Basic sigma.js example</title>
-  <style type="text/css">
-    body {
-      margin: 0;
-    }
-    #container {
-      position: absolute;
-      width: 100%;
-      height: 100%;
-    }
-  </style>
-</head>
-<body>
-  <select>
-    <option>Google</option>
-  </select>
+  <head>
+    <title>New Node Viewer version 0.1</title>
+    <style type="text/css">
+      body {
+        margin: 0;
+      }
+      #Panel{
+        position:absolute;
+        width: 320px;
+        top:6%;
+      }
+      #Info_Panel{
+        position: relative;
+        width: 320px;
+        float: right;
+        margin-top: 3%;
+      }
+      #sigma-container {
+        position: absolute;
+        width: 100%;
+        height: 100%;
+      }
+      #loading {
+      color: black;
+      background: #fff; 
+      padding: 10px;
+      border-radius:3px;
+      background-color: #000;
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      z-index: 100;
+      margin-right: -25%;
+      margin-bottom: -25%;
+      }   
+    </style>
+    <link href="css/bootstrap.min.css" rel="stylesheet">  
+    <link href='http://ajax.googleapis.com/ajax/libs/jqueryui/1.8/themes/base/jquery-ui.css' rel='stylesheet' type='text/css'>
+    <script src="js/sigma.min.js"></script>
+    <script src="js/plugins/sigma.layout.forceAtlas2.min.js"></script>
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
+    <script src="//code.jquery.com/ui/1.10.4/jquery-ui.js"></script>
+  </head>
+  <body>
+  <div id="loading" style="display:none"></div>
+  <div id="sigma-container"></div>
+  <div class="panel panel-primary" id="Panel">
+    <div class="panel-heading">
+      <h1 class="panel-title">
+        Graph Setup
+      </h1>
+    </div>
+    <div class="panel panel-body">
+        Choose a data source:
+        <select>
+          <option>Google</option>
+        </select>
+        <br>
+        <input type="text" id="node0" placeholder="type a node to start with">
+        <br>
+        <input type="text" id="rel" placeholder="type a relation here">
+        <br>
+        <button id="node0submit">Submit</button>
+        <br>
+    </div>
+    <div class="panel panel-primary" id="graph-config">
+      <div class="panel-heading">
+        <h1 class="panel-title">
+          Graph config
+        </h1>
+      </div>      
 
-  <input type="text" id="node0" placeholder="type a node to start with">
-  <input type="text" id="rel" placeholder="type a relation here">
-  <button id="node0submit">Submit</button>
-  <button id="stop">Stop Layout</button>
-  <button id="start">Restart Layout</button>
+      Control node size:<br>
+      <div id="node-size-slider"></div><br>
 
-  <div id="container"></div>
+      <button id="stop">Stop Layout</button>
+      <button id="start">Restart Layout</button>  <br>   
 
-  <script src="js/sigma.min.js"></script>
-  <script src="js/plugins/sigma.layout.forceAtlas2.min.js"></script>
-  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
-  <script src="js/main.js"></script>
-</body>
+      <div id="input-group">
+        <input type="text" class="form-control" id="search-input">
+        <span class="input-group-btn">
+          <button class="btn btn-default" type="button" id="nodes-search">Go!</button>
+        </span>
+      </div>  
+      <div class="panel panel-info" id="search-results"></div>
+      <button id="recursion" style="display:none">Click at your peril</button>      
+    </div>
+
+
+
+  </div>
+
+
+
+
+  <div class="panel panel-info" id="Info_Panel">
+    <div class="panel-heading">
+      <h1 class="panel-title">
+        Node Information
+      </h1>
+    </div>
+    <div class="panel-body" id="infopanel" ></div>
+  </div>
+
+
+
+
+
+  <!--load the body sdcript once all the DOM is loaded-->
+  <script src="js/main.js"></script>  
+  </body>
 </html
